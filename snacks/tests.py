@@ -1,14 +1,14 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-# Create your tests here.
+
 from .models import Snack
 
 
 class SnackTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="tester", email="tester@email.com", password="pass")
+        self.user = get_user_model().objects.create_user(username="tester", email="tester@email.com", password="pass")
 
         self.snack = Snack.objects.create(
             title="Salad",
@@ -21,23 +21,23 @@ class SnackTests(TestCase):
 
     def test_snack_content(self):
         self.assertEqual(f"{self.snack.title}", "Salad")
-        self.assertEqual(f"{self.snack.purchaser}", "tester")
+        self.assertEqual(f"{self.snack.purchaser}", "tester@email.com")
         self.assertEqual(f"{self.snack.description}", "Salad description")
 
     def test_snack_list_view(self):
         response = self.client.get(reverse("snack_list"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Salad")
-        self.assertTemplateUsed(response, "base.html")
-        self.assertTemplateUsed(response, "snack_list.html")
+        self.assertTemplateUsed(response, "snacks/base.html")
+        self.assertTemplateUsed(response, "snacks/snack_list.html")
 
     def test_snack_detail_view(self):
         response = self.client.get(reverse("snack_detail", args="1"))
         no_response = self.client.get("/100000/")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(no_response.status_code, 404)
-        self.assertTemplateUsed(response, "base.html")
-        self.assertTemplateUsed(response, "snack_detail.html")
+        self.assertTemplateUsed(response, "snacks/base.html")
+        self.assertTemplateUsed(response, "snacks/snack_list.html")
 
     def test_snack_create_view(self):
         response = self.client.post(

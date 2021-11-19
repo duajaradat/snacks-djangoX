@@ -13,4 +13,4 @@ class Snack(models.Model):
         return reverse('snack_detail', args=[str(self.id)])
 
     def __str__(self):
-        return self.name
+        return self.title
