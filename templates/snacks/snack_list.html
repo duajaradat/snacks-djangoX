@@ -1,0 +1,23 @@
+{% extends 'snacks/base.html' %}
+{% block title %}Snacks Menu{% endblock title %}
+
+{% block header %}
+<nav>
+    <ul>
+        <li><a href="{% url 'snack_list' %}">Home</a></li>
+        <li><a href="{% url  'snack_create' %}">Add Snack</a></li>
+    </ul>
+</nav>
+{% endblock header %}
+
+{% block content %}
+<h1>Snacks Menu</h1>
+<ul>
+  {% for snack in object_list %}
+  <li>
+    <a href="{% url 'snack_detail' snack.pk %}">{{ snack.title }}</a>
+  </li>
+  {% endfor %}
+</ul>  
+
+{% endblock content %}
